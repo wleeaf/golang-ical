@@ -529,7 +529,8 @@ func parsePropertyValue(r *BaseProperty, contentLine string, p int) *BasePropert
 // of TEXT values. Unescaping such a value would merge the separating commas
 // with escaped commas inside the values, so it is kept in its escaped form.
 func (bp *BaseProperty) isTextList() bool {
-	switch Property(bp.IANAToken) {
+	// Property names are case-insensitive (RFC 5545 section 3.1).
+	switch Property(strings.ToUpper(bp.IANAToken)) {
 	case PropertyCategories, PropertyResources:
 		return true
 	}

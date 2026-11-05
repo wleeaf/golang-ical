@@ -1033,6 +1033,8 @@ func TestCategoriesAndResourcesKeepTheirValues(t *testing.T) {
 	input := "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:x\r\nBEGIN:VEVENT\r\nUID:1\r\nDTSTAMP:20240101T000000Z\r\n" +
 		"CATEGORIES:Work,Personal\r\n" +
 		"RESOURCES:Projector,Room A\\, 2nd floor\r\n" +
+		"categories:Home,Garden\r\n" +
+		"Resources:Van,Trailer\r\n" +
 		"END:VEVENT\r\nEND:VCALENDAR\r\n"
 	cal, err := ParseCalendar(strings.NewReader(input))
 	if !assert.NoError(t, err) {
@@ -1041,6 +1043,8 @@ func TestCategoriesAndResourcesKeepTheirValues(t *testing.T) {
 	out := cal.Serialize(WithNewLineWindows)
 	assert.Contains(t, out, "CATEGORIES:Work,Personal\r\n")
 	assert.Contains(t, out, "RESOURCES:Projector,Room A\\, 2nd floor\r\n")
+	assert.Contains(t, out, "categories:Home,Garden\r\n")
+	assert.Contains(t, out, "Resources:Van,Trailer\r\n")
 
 	// A value added with the setters stays a single value.
 	cal = NewCalendar()
