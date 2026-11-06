@@ -473,10 +473,14 @@ func TestIssue52(t *testing.T) {
 		_, fn := filepath.Split(path)
 		t.Run(fn, func(t *testing.T) {
 			f, err := TestData.Open(path)
-			if err != nil && errors.Is(err, io.EOF) {
+			if err != nil {
 				t.Fatalf("Error reading file: %s", err)
 			}
-			defer f.Close()
+			defer func() {
+				if err := f.Close(); err != nil {
+					t.Errorf("Error closing %s: %v", path, err)
+				}
+			}()
 
 			if _, err := ParseCalendar(f); err != nil && !errors.Is(err, io.EOF) {
 				t.Fatalf("Error parsing file: %s", err)
